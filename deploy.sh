@@ -17,7 +17,7 @@ wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v$
 7z x -aos "npp.$ver.Installer.exe" -x'!change.log' -x'!doLocalConf.xml' -x'!LICENSE' -x'!NppShell_06.dll' -x'!readme.txt' -x'!userDefinedLang-markdown.default.modern.xml' -o"npp-stable/usr/share/notepad++"
 # winedata
 appdir="npp-stable/usr/share/notepad++"
-mkdir -p "npp-stable/winedata/Application Data/Notepad++" && mkdir -p "usr/share/notepad-plus-plus/plugins/Config"
+mkdir -p "npp-stable/winedata/Application Data/Notepad++" && mkdir -p "npp-stable/usr/share/notepad-plus-plus/plugins/Config"
 cp -R $appdir/'$_14_'/* "npp-stable/winedata/Application Data/Notepad++";cp -R $appdir/'$_15_'/* "npp-stable/usr/share/notepad++/plugins";cp -R $appdir/'$_17_'/* "npp-stable/usr/share/notepad++/plugins/Config"
 find $appdir/'$PLUGINSDIR' -type f -name '*.xml' -print0 | while read -d $'\0' file; do cp -v "$file" $appdir/localization/ &>/dev/null; done
 rm -R $appdir/'$_14_';rm -R $appdir/'$_15_';rm -R $appdir/'$_17_';rm -R $appdir/'$PLUGINSDIR';
