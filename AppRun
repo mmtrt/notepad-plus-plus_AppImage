@@ -111,7 +111,6 @@ sleep 1
 rm $progReg &>/dev/null
 fi
 
-echo "disable" > "$WINEPREFIX/.update-timestamp"
 fi
 
 # Passing args to wine apps
