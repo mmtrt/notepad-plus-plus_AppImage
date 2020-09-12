@@ -54,4 +54,4 @@ wget -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/ap
 chmod +x ./appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage --appimage-extract
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|continuous|notepad++*.AppImage.zsync" notepad++_${ver}-${ARCH}.AppImage
+export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|continuous|notepad*.AppImage.zsync" notepad-plus-plus_${ver}-${ARCH}.AppImage
