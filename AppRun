@@ -11,12 +11,26 @@ progBin="$progName.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 progReg="/tmp/dlloverrides.reg"
 
+# env used by unionfs-fuse
+RO_WINEPREFIX="$HERE/.wine/"
+MNT_WINEPREFIX="$progHome/.wine"
+TMP_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
+
 # Symlink stuff
-mkdir -p "$progHome" || exit 1
+mkdir -p "$MNT_WINEPREFIX" "$TMP_WINEPREFIX_OVERLAY" || exit 1
 # Delete broken symlinks
 find -L "$progHome" -maxdepth 2 -type l -delete
 # Update existing symlinks, add new symlinks
 cp -urs "$progRealPath/"* "$progHome" 2> /dev/null
+
+# do unionfs-fuse magic here
+$HERE/usr/bin/unionfs-fuse -o use_ino,nonempty,uid=$UID -ocow "$TMP_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+
+function finish {
+  echo "Cleaning up"
+  killall $HERE/usr/bin/unionfs-fuse
+}
+trap finish EXIT
 
 dkico() {
 if [[ ! -f $progIcoD ]]; then
@@ -68,52 +82,6 @@ fi
 
 # Create custom $WINEPREFIX and add $WINEDLLOVERRIDES
 export WINEPREFIX="${progHome}/.wine" WINEDLLOVERRIDES="mscoree,mshtml=" WINEDEBUG=fixme-all
-
-if [ ! -d "$WINEPREFIX" ]; then
-
-# link ttf & ttc fonts from root to wineprefix
-mkdir -p "$WINEPREFIX"/drive_c/windows/Fonts
-find /usr/share/fonts/ -type f \( -name "*.ttf" -o -name "*.ttc" \) -exec ln -vs "{}" "$WINEPREFIX"/drive_c/windows/Fonts/ \; &>/dev/null
-
-mkdir -p "$WINEPREFIX"/drive_c/users/"$USER"
-cp -R "$HERE/winedata/Application Data" "$WINEPREFIX"/drive_c/users/"$USER"
-
-# Remove xml file links & copy xml files
-rm "$progHome"/updater/gup.xml &>/dev/null
-cp "$progRealPath"/updater/gup.xml "$progHome"/updater &>/dev/null
-
-for xmls in ls "$progRealPath/*xml*"
-do
-rm "$progHome"/"$xmls" &>/dev/null
-cp "$progRealPath"/"$xmls" "$progHome"/ &>/dev/null
-done
-
-# Check for LANG=zh_* in locale and apply font changes if it exists.
-if (locale | grep -e 'LANG=zh_CN' -e 'LANG=zh_SG') >/dev/null 2>&1; then cat > $progReg <<'EOF'
-Windows Registry Editor Version 5.00
-
-[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]
-"MS Shell Dlg"="Noto Sans CJK SC Regular"
-"Tms Rmn"="Noto Sans CJK SC Regular"
-EOF
-regedit $progReg
-sleep 1
-rm $progReg &>/dev/null
-fi
-
-if (locale | grep -e 'LANG=zh_HK' -e 'LANG=zh_MO' -e 'LANG=zh_TW') >/dev/null 2>&1; then cat > $progReg <<'EOF'
-Windows Registry Editor Version 5.00
-
-[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]
-"MS Shell Dlg"="Noto Sans CJK TC Regular"
-"Tms Rmn"="Noto Sans CJK TC Regular"
-EOF
-regedit $progReg
-sleep 1
-rm $progReg &>/dev/null
-fi
-
-fi
 
 # Passing args to wine apps
 for i; do # for i = for i in "$@"
