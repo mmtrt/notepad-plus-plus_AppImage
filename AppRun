@@ -23,11 +23,11 @@ find -L "$progHome" -maxdepth 2 -type l -delete
 cp -urs "$progRealPath/"* "$progHome" 2> /dev/null
 
 # do unionfs-fuse magic here
-$HERE/usr/bin/unionfs-fuse -o use_ino,nonempty,uid=$UID -ocow "$TMP_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+"$HERE"/usr/bin/unionfs-fuse -o use_ino,nonempty,uid=$UID -ocow "$TMP_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
 
 function finish {
   echo "Cleaning up"
-  killall $HERE/usr/bin/unionfs-fuse
+  killall "$HERE"/usr/bin/unionfs-fuse
 }
 trap finish EXIT
 
