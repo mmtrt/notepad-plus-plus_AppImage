@@ -52,8 +52,8 @@ cp -r icons npp-stable/usr/share ; cp notepad++.png npp-stable
 
 wget -q http://mirrors.kernel.org/ubuntu/pool/main/f/fuse/libfuse2_2.9.9-3_amd64.deb 
 wget -q http://mirrors.kernel.org/ubuntu/pool/universe/u/unionfs-fuse/unionfs-fuse_1.0-1ubuntu2_amd64.deb
-ls -al && find ./ -name '*.deb' -exec dpkg -x {} . \;
-cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./usr/lib npp-stable/usr/ && rm -r ./usr
+find ./ -name '*.deb' -exec dpkg -x {} . \;
+ls -al ./usr && cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./usr/lib npp-stable/usr/ && rm -r ./usr
 
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine-stable-x86_64.AppImage && chmod +x wine-stable-x86_64.AppImage
 
@@ -68,4 +68,4 @@ wget -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/ap
 chmod +x ./appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage --appimage-extract
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|continuous|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"-${ARCH}.AppImage
+export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|continuous-testing|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"-${ARCH}.AppImage
