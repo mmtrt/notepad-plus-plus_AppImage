@@ -50,7 +50,7 @@ done
 
 cp -r icons npp-stable/usr/share ; cp notepad++.png npp-stable
 
-apt download fuse unionfs-fuse libfuse2 && find ../.. -name '*.deb' -exec dpkg -x {} . \;
+apt download fuse unionfs-fuse libfuse2 && ls -lh && find ./ -name '*.deb' -exec dpkg -x {} . \;
 cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./usr/lib npp-stable/usr/ && rm -r ./usr
 
 wget https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine-stable-x86_64.AppImage && chmod +x wine-stable-x86_64.AppImage
@@ -58,6 +58,7 @@ wget https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine-st
 export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEPREFIX=$(readlink -f ./npp-stable/.wine)
 ./wine-stable-x86_64.AppImage wineboot && sleep 5 && rm wine-stable-x86_64.AppImage
+echo "disable" > "$WINEPREFIX/.update-timestamp"
 ls -al "$WINEPREFIX" && ls -al npp-stable/usr/bin
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
 
