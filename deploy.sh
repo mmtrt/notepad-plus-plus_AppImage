@@ -50,10 +50,12 @@ done
 
 cp -r icons npp-stable/usr/share ; cp notepad++.png npp-stable
 
-apt download fuse unionfs-fuse libfuse2 && ls -lh && find ./ -name '*.deb' -exec dpkg -x {} . \;
+wget -q http://mirrors.kernel.org/ubuntu/pool/main/f/fuse/libfuse2_2.9.9-3_amd64.deb 
+wget -q http://mirrors.kernel.org/ubuntu/pool/universe/u/unionfs-fuse/unionfs-fuse_1.0-1ubuntu2_amd64.deb
+ls -al && find ./ -name '*.deb' -exec dpkg -x {} . \;
 cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./usr/lib npp-stable/usr/ && rm -r ./usr
 
-wget https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine-stable-x86_64.AppImage && chmod +x wine-stable-x86_64.AppImage
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine-stable-x86_64.AppImage && chmod +x wine-stable-x86_64.AppImage
 
 export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEPREFIX=$(readlink -f ./npp-stable/.wine)
