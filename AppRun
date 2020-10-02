@@ -9,7 +9,6 @@ progRealPath="$HERE/usr/share/$progName"
 progHome="$HOME/.$progName"
 progBin="$progName.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
-progReg="/tmp/dlloverrides.reg"
 
 # env used by unionfs-fuse
 RO_WINEPREFIX="$HERE/.wine/"
