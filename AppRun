@@ -88,6 +88,9 @@ if [ ! -d "$WINEPREFIX/drive_c/users/$USER" ]; then
 rm "$progHome"/updater/gup.xml
 cp -Rvp "$progRealPath"/updater/gup.xml "$progHome"/updater
 
+# Copy over theme files
+cp -Rvp "$HERE/winedata/Application Data/Notepad++/themes" "$progHome"
+
 for xmls in $(ls $progRealPath/ | grep xml)
 do
 rm "$progHome"/"$xmls" &>/dev/null
