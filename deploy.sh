@@ -53,7 +53,7 @@ cp -r icons npp-stable/usr/share ; cp notepad++.png npp-stable
 wget -q http://mirrors.kernel.org/ubuntu/pool/main/f/fuse/libfuse2_2.9.9-3_amd64.deb 
 wget -q http://mirrors.kernel.org/ubuntu/pool/universe/u/unionfs-fuse/unionfs-fuse_1.0-1ubuntu2_amd64.deb
 find ./ -name '*.deb' -exec dpkg -x {} . \;
-ls -al ./usr && cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./usr/lib npp-stable/usr/ && rm -r ./usr
+cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./lib npp-stable/usr/ && rm -r ./{usr,lib}
 
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine-stable-x86_64.AppImage && chmod +x wine-stable-x86_64.AppImage
 
@@ -61,7 +61,6 @@ export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEPREFIX=$(readlink -f ./npp-stable/.wine)
 ./wine-stable-x86_64.AppImage wineboot && sleep 5 && rm wine-stable-x86_64.AppImage
 echo "disable" > "$WINEPREFIX/.update-timestamp"
-ls -al "$WINEPREFIX" && ls -al npp-stable/usr/bin
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
 
 wget -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
