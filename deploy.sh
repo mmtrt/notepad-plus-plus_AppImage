@@ -13,7 +13,7 @@ rm $pkgdebins
 done
 
 ver=$(wget https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep tag_name | cut -d'"' -f4 | sed s'/v//' | head -n1)
-wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v"${ver}"/npp."${ver}".Installer.exe &> /dev/null
+wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v"${ver}"/npp."${ver}".Installer.x64.exe &> /dev/null
 7z x -aos "npp.$ver.Installer.exe" -x'!change.log' -x'!doLocalConf.xml' -x'!LICENSE' -x'!NppShell_06.dll' -x'!readme.txt' -x'!userDefinedLang-markdown.default.modern.xml' -o"npp-stable/usr/share/notepad++"
 # winedata
 appdir="npp-stable/usr/share/notepad++"
