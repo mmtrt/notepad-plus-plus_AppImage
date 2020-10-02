@@ -50,8 +50,7 @@ done
 
 cp -r icons npp-stable/usr/share ; cp notepad++.png npp-stable
 
-wget -q http://mirrors.kernel.org/ubuntu/pool/main/f/fuse/libfuse2_2.9.9-3_amd64.deb 
-wget -q http://mirrors.kernel.org/ubuntu/pool/universe/u/unionfs-fuse/unionfs-fuse_1.0-1ubuntu2_amd64.deb
+apt download libfuse2 unionfs-fuse && ls -al
 find ./ -name '*.deb' -exec dpkg -x {} . \;
 cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./lib npp-stable/usr/ && rm -r ./{usr,lib}
 
