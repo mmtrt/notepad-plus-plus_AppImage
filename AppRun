@@ -82,6 +82,20 @@ fi
 # Create custom $WINEPREFIX and add $WINEDLLOVERRIDES
 export WINEPREFIX="${progHome}/.wine" WINEDLLOVERRIDES="mscoree,mshtml=" WINEDEBUG=fixme-all
 
+if [ ! -d "$WINEPREFIX/drive_c/users/$USER" ]; then
+
+# Remove xml file links & copy xml files
+rm "$progHome"/updater/gup.xml
+cp -Rvp "$progRealPath"/updater/gup.xml "$progHome"/updater
+
+for xmls in $(ls $progRealPath/ | grep xml)
+do
+rm "$progHome"/"$xmls" &>/dev/null
+cp -Rvp "$progRealPath"/"$xmls" "$progHome"/
+done
+
+fi
+
 # Passing args to wine apps
 for i; do # for i = for i in "$@"
     # Add path in Wine form (e.g. "z:/home/user/Desktop/lol.xyz")
