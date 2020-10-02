@@ -27,14 +27,14 @@ rm ./*.exe
 cat > wine <<'EOF'
 #!/bin/bash
 export winecmd=$(find $HOME/Downloads $HOME/bin $HOME/.local/bin -type f \( -name '*.appimage' -o -name '*.AppImage' \) 2>/dev/null | grep -e "wine-stable" -e 'Wine-stable' | head -n 1)
-$winecmd wine "$@"
+$winecmd "$@"
 EOF
 chmod +x wine
 
 cat > wineserver <<'EOF1'
 #!/bin/bash
 export winecmd=$(find $HOME/Downloads $HOME/bin $HOME/.local/bin -type f \( -name '*.appimage' -o -name '*.AppImage' \) 2>/dev/null | grep -e "wine-stable" -e 'Wine-stable' | head -n 1)
-$winecmd wineserver "$@"
+$winecmd "$@"
 EOF1
 chmod +x wineserver
 
