@@ -59,8 +59,14 @@ wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine
 
 export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEPREFIX=$(readlink -f ./npp-stable/.wine)
+
+# Create WINEPREFIX
 ./wine-stable-x86_64.AppImage wineboot && sleep 5 && rm wine-stable-x86_64.AppImage
+
+# Disable WINEPREFIX changes
 echo "disable" > "$WINEPREFIX/.update-timestamp"
+
+# Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
 
 wget -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
