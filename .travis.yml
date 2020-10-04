@@ -5,6 +5,8 @@ os: linux
 
 script:
  - sudo apt update
+ - wget -q --content-disposition https://go.microsoft.com/fwlink/?LinkID=75078
+ - wget -q https://gist.github.com/mmtrt/73db349fec787bcc5dd33ff0d6726553/raw/5c23a358d5d809087725728a4783bfb087b327fd/ztr.txt
  - bash -ex deploy.sh
 
 env:

@@ -54,13 +54,18 @@ apt download libfuse2 unionfs-fuse && ls -al
 find ./ -name '*.deb' -exec dpkg -x {} . \;
 cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./lib npp-stable/usr/ && rm -r ./{usr,lib}
 
+cat ztr.txt | base64 -d > zune.reg ; 7z e ZuneDesktopTheme.msi -oResources/Themes/zune ZuneMSSTYLES ; ls -al
+(cd Resources/Themes/zune ;  mv *MSS* zune.msstyles ; ls)
+
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine-stable-x86_64.AppImage && chmod +x wine-stable-x86_64.AppImage
 
 export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEPREFIX=$(readlink -f ./npp-stable/.wine)
 
 # Create WINEPREFIX
-./wine-stable-x86_64.AppImage wineboot && sleep 5 && rm wine-stable-x86_64.AppImage
+./wine-stable-x86_64.AppImage wineboot ; sleep 5 ; cp -Rvp Resources $WINEPREFIX/drive_c/windows/
+./wine-stable-x86_64.AppImage regedit zune.reg ; sleep 1
+rm wine-stable-x86_64.AppImage
 
 # Disable WINEPREFIX changes
 echo "disable" > "$WINEPREFIX/.update-timestamp"
