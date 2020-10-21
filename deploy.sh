@@ -57,7 +57,7 @@ cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ && cp -Rvp ./lib npp-stable/usr/ && rm 
 cat ztr.txt | base64 -d > zune.reg ; 7z e ZuneDesktopTheme.msi -oResources/Themes/zune ZuneMSSTYLES ; ls -al
 (cd Resources/Themes/zune ;  mv *MSS* zune.msstyles ; ls)
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous/wine-stable-x86_64.AppImage && chmod +x wine-stable-x86_64.AppImage
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-test/wine-stable-x86_64.AppImage && chmod +x wine-stable-x86_64.AppImage
 
 export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEPREFIX=$(readlink -f ./npp-stable/.wine)
