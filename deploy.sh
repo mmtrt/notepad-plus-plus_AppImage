@@ -1,17 +1,5 @@
 #!/bin/bash
 
-# 7zip newer
-for dldebs in https://launchpad.net/ubuntu/+source/p7zip/16.02+dfsg-4/+build/13091326/+files/p7zip_16.02+dfsg-4_amd64.deb https://launchpad.net/ubuntu/+source/p7zip/16.02+dfsg-4/+build/13091326/+files/p7zip-full_16.02+dfsg-4_amd64.deb 
-do
-wget $dldebs &> /dev/null
-done
-
-for pkgdebins in p7zip_16.02+dfsg-4_amd64.deb p7zip-full_16.02+dfsg-4_amd64.deb
-do
-sudo apt install ./$pkgdebins -y &> /dev/null
-rm $pkgdebins
-done
-
 ver=$(wget https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep tag_name | cut -d'"' -f4 | sed s'/v//' | head -n1)
 wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v"${ver}"/npp."${ver}".Installer.exe &> /dev/null
 7z x -aos "npp.$ver.Installer.exe" -x'!change.log' -x'!doLocalConf.xml' -x'!LICENSE' -x'!NppShell_06.dll' -x'!readme.txt' -x'!userDefinedLang-markdown.default.modern.xml' -o"npp-stable/usr/share/notepad++"
