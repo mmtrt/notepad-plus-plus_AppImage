@@ -60,7 +60,7 @@ cp -Rvp $WINEPREFIX npp-stable/ ; rm -rf $WINEPREFIX
 
 ( cd npp-stable ; wget -qO- 'https://gist.github.com/mmtrt/df659de58e36ee091e203ab3c1460619/raw/c5a6c78c7412f10d4d2a548930c3f1e54223a019/nppswp.patch' | patch -p1 )
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -n -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable_wp|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"_WP-${ARCH}.AppImage
+export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -n -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable-wp|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"_WP-${ARCH}.AppImage
 
 }
 
