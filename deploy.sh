@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ver=$(wget https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep "Notepad++ " | sed s'|"| |g' | awk '{print $5}' | head -n1)
-wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v$(echo $ver | grep -o -E '[0-9]+' | head -1 | sed -e 's/^0\+//')/npp.${ver}.Installer.x64.exe &> /dev/null
+curl -sLO https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v$(echo $ver | grep -o -E '[0-9]+' | head -1 | sed -e 's/^0\+//')/npp.${ver}.Installer.x64.exe &> /dev/null
 7z x -aos "npp.$ver.Installer.x64.exe" -x'!change.log' -x'!doLocalConf.xml' -x'!LICENSE' -x'!NppShell_06.dll' -x'!readme.txt' -x'!userDefinedLang-markdown.default.modern.xml' -o"npp-stable/usr/share/notepad-plus-plus"
 # winedata
 appdir="npp-stable/usr/share/notepad-plus-plus"
