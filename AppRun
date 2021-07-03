@@ -151,9 +151,6 @@ case "$1" in
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
     wine "$1"
     ;;
-  "/playpause"|"/stop"|"/next"|"/prev"|"/random"|"/config")
-    wine "$progHome/$progBin" "$1"
-    ;;
   *)
     wine "$progHome/$progBin" "${args[@]}" 2>/dev/null
     ;;
