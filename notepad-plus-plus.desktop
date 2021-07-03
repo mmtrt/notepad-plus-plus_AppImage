@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=Notepad++
+Name=notepad-plus-plus
 GenericName=Text Editor
 Comment=Simple and free source code editor.
 Type=Application
 Terminal=false
-Icon=notepad++
+Icon=notepad-plus-plus
 Exec=AppRun
 StartupWMClass=notepad++.exe
 Categories=Utility;TextEditor;
