@@ -45,7 +45,7 @@ jobs:
           name: notepad-plus-plus-continuous-x86_64.AppImage
           path: 'dist'
 
-  Release-stable:
+  release-stable:
     needs: [npp]
     runs-on: ubuntu-latest
 
@@ -57,7 +57,7 @@ jobs:
       - name: Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          title: notepad-plus-plus Stable AppImage Builds
+          title: notepad-plus-plus stable
           automatic_release_tag: stable
           prerelease: false
           draft: false
