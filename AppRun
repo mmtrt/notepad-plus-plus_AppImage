@@ -2,12 +2,12 @@
 
 HERE="$(dirname "$(readlink -f "${0}")")"
 
-progName="notepad++"
+progName="notepad-plus-plus"
 progArch="-x86_64"
 progVer=
 progRealPath="$HERE/usr/share/$progName"
 progHome="$HOME/.$progName"
-progBin="$progName.exe"
+progBin="notepad++.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 progReg="/tmp/dlloverrides.reg"
 
@@ -28,7 +28,7 @@ DesktopFilePath="${HOME}/.local/share/applications/$progName.desktop"
 {
 echo "[Desktop Entry]"
 echo "Type=Application"
-echo "Name=$progName"
+echo "Name=Notepad++"
 echo "GenericName=Text Editor"
 echo "Comment=Simple and free source code editor."
 echo "Encoding=UTF-8"
@@ -46,15 +46,30 @@ fi
 }
 
 # check for wine appimage
-checkwine=$(find "$HOME"/Downloads "$HOME"/bin "$HOME"/.local/bin -type f \( -name '*.appimage' -o -name '*.AppImage' \) 2>/dev/null | grep -e "wine-stable" -e 'Wine-stable' | head -n 1 | wc -l)
+wine_file=$(find "$HOME"/Downloads "$HOME"/bin "$HOME"/.local/bin -type f \( -name '*.appimage' -o -name '*.AppImage' \) 2>/dev/null | grep -e "wine-stable" -e 'Wine-stable' | head -n 1)
 
-if [ "$checkwine" -eq 1 ]; then
-export WINESERVER=$HERE/usr/bin/wineserver
-export WINE=$HERE/usr/bin/wine
+if [[ -f $wine_file ]]; then
+
+# Calling binary files from other AppImage having $ARGV0
+
+export winecmd=$wine_file
+
+function wine {
+  $winecmd wine "$@"
+}
+
+function wineserver {
+  $winecmd wineserver "$@"
+}
+
+function winetricks {
+  $winecmd winetricks -q "$@"
+}
+
 else
 echo "wine-stable appimage is missing can not run npp"
 echo ""
-echo "Download wine-stable*bionic.appimage from https://github.com/mmtrt/Wine_Appimage/releases"
+echo "Download wine-stable*.appimage from https://github.com/mmtrt/WINE_Appimage/releases"
 echo ""
 echo "Then"
 echo ""
@@ -69,7 +84,7 @@ fi
 # Create custom $WINEPREFIX and add $WINEDLLOVERRIDES
 export WINEPREFIX="${progHome}/.wine" WINEDLLOVERRIDES="mscoree,mshtml=" WINEDEBUG=fixme-all
 
-if [ ! -d "$WINEPREFIX" ]; then
+if [[ ! -d $WINEPREFIX ]]; then
 
 # link ttf & ttc fonts from root to wineprefix
 mkdir -p "$WINEPREFIX"/drive_c/windows/Fonts
@@ -82,10 +97,9 @@ cp -R "$HERE/winedata/Application Data" "$WINEPREFIX"/drive_c/users/"$USER"
 rm "$progHome"/updater/gup.xml &>/dev/null
 cp "$progRealPath"/updater/gup.xml "$progHome"/updater &>/dev/null
 
-for xmls in ls "$progRealPath/*xml*"
-do
-rm "$progHome"/"$xmls" &>/dev/null
-cp "$progRealPath"/"$xmls" "$progHome"/ &>/dev/null
+for xmls in $(ls $progRealPath/ | grep xml); do
+    rm $progHome/$xmls &>/dev/null
+    cp $progRealPath/$xmls $progHome/ &>/dev/null
 done
 
 # Check for LANG=zh_* in locale and apply font changes if it exists.
@@ -93,10 +107,10 @@ if (locale | grep -e 'LANG=zh_CN' -e 'LANG=zh_SG') >/dev/null 2>&1; then cat > $
 Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]
-"MS Shell Dlg"="Noto Sans CJK SC Regular"
-"Tms Rmn"="Noto Sans CJK SC Regular"
+"MS Shell Dlg"="Noto Sans CJK SC"
+"Tms Rmn"="Noto Sans CJK SC"
 EOF
-regedit $progReg
+wine regedit $progReg
 sleep 1
 rm $progReg &>/dev/null
 fi
@@ -105,10 +119,10 @@ if (locale | grep -e 'LANG=zh_HK' -e 'LANG=zh_MO' -e 'LANG=zh_TW') >/dev/null 2>
 Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]
-"MS Shell Dlg"="Noto Sans CJK TC Regular"
-"Tms Rmn"="Noto Sans CJK TC Regular"
+"MS Shell Dlg"="Noto Sans CJK TC"
+"Tms Rmn"="Noto Sans CJK TC"
 EOF
-regedit $progReg
+wine regedit $progReg
 sleep 1
 rm $progReg &>/dev/null
 fi
@@ -125,10 +139,22 @@ for i; do # for i = for i in "$@"
     fi
 done
 
-if [ "$1" == "winecfg" ] ; then
-  $WINE "winecfg" 2>/dev/null
-elif [ "$1" == "install" ]; then
-  dkico
-else
-  $WINE "$progHome/$progBin" "${args[@]}" 2>/dev/null
-fi
+# Launch wineboot/winecfg/winetricks if requested.
+# If the executable exists then launch it.
+case "$1" in
+  "install")
+    dkico
+    ;;
+  "winetricks")
+    winetricks "$2" "$3"
+    ;;
+  "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
+    wine "$1"
+    ;;
+  "/playpause"|"/stop"|"/next"|"/prev"|"/random"|"/config")
+    wine "$progHome/$progBin" "$1"
+    ;;
+  *)
+    wine "$progHome/$progBin" "${args[@]}" 2>/dev/null
+    ;;
+esac
