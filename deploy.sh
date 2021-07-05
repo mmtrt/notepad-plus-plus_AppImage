@@ -20,6 +20,7 @@ wget https://github.com/$(wget -qO- https://github.com/notepad-plus-plus/notepad
 # winedata
 appdir="npp-stable/usr/share/notepad-plus-plus"
 mkdir -p "npp-stable/winedata/Application Data/Notepad++" && mkdir -p "npp-stable/usr/share/notepad-plus-plus/plugins/Config"
+mv $appdir/notepad++.exe $appdir/notepad-plus-plus.exe
 cp -R $appdir/'$_14_'/* "npp-stable/winedata/Application Data/Notepad++";cp -R $appdir/'$_15_'/* "npp-stable/usr/share/notepad-plus-plus/plugins";cp -R $appdir/'$_17_'/* "npp-stable/usr/share/notepad-plus-plus/plugins/Config"
 find $appdir/'$PLUGINSDIR' -type f -name '*.xml' -print0 | while read -d $'\0' file; do cp -v "$file" $appdir/localization/ &>/dev/null; done
 rm -R $appdir/'$_14_';rm -R $appdir/'$_15_';rm -R $appdir/'$_17_';rm -R $appdir/'$PLUGINSDIR';
@@ -41,10 +42,6 @@ export WINEPREFIX="/home/runner/.wine"
 export WINEDEBUG="-all"
 
 npps ; rm ./*AppImage*
-
-# apt download unionfs-fuse
-# find ./ -name '*.deb' -exec dpkg -x {} . \;
-# cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ ; rm *.deb
 
 # Create WINEPREFIX
 wineboot ; sleep 5
