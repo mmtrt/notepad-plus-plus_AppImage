@@ -42,9 +42,9 @@ export WINEDEBUG="-all"
 
 npps ; rm ./*AppImage*
 
-apt download unionfs-fuse
-find ./ -name '*.deb' -exec dpkg -x {} . \;
-cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ ; rm *.deb
+# apt download unionfs-fuse
+# find ./ -name '*.deb' -exec dpkg -x {} . \;
+# cp -Rvp ./usr/{bin,sbin} npp-stable/usr/ ; rm *.deb
 
 # Create WINEPREFIX
 wineboot ; sleep 5
@@ -58,7 +58,7 @@ wineboot ; sleep 5
 
 cp -Rvp $WINEPREFIX npp-stable/ ; rm -rf $WINEPREFIX
 
-( cd npp-stable ; wget -qO- 'https://gist.github.com/mmtrt/df659de58e36ee091e203ab3c1460619/raw/a84ccc5e6f3895d1cfd8f7a2e9ed7ce6ec7929ab/nppswp.patch' | patch -p1 )
+( cd npp-stable ; wget -qO- 'https://gist.github.com/mmtrt/df659de58e36ee091e203ab3c1460619/raw/d4107063c7fb03f309c4b2b986b87ebd1eee212d/nppswp.patch' | patch -p1 )
 
 export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -n -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable-wp|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"_WP-${ARCH}.AppImage
 
