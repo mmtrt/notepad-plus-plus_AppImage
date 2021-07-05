@@ -7,7 +7,7 @@ progArch="-x86_64"
 progVer=
 progRealPath="$HERE/usr/share/$progName"
 progHome="$HOME/.$progName"
-progBin="notepad++.exe"
+progBin="$progName.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 progReg="/tmp/dlloverrides.reg"
 
@@ -69,7 +69,7 @@ function winetricks {
 else
 echo "wine-stable appimage is missing can not run npp"
 echo ""
-echo "Download wine-stable*.appimage from https://github.com/mmtrt/WINE_Appimage/releases"
+echo "Download wine-stable*.appimage from https://github.com/mmtrt/WINE_AppImage/releases"
 echo ""
 echo "Then"
 echo ""
