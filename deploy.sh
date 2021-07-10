@@ -56,7 +56,7 @@ wineboot ; sleep 5
 
 cp -Rvp $WINEPREFIX npp-stable/ ; rm -rf $WINEPREFIX
 
-( cd npp-stable ; wget -qO- 'https://gist.github.com/mmtrt/df659de58e36ee091e203ab3c1460619/raw/6dda9c96673307366dd8070c5ad9683b622bb60c/nppswp.patch' | patch -p1 )
+( cd npp-stable ; wget -qO- 'https://gist.github.com/mmtrt/df659de58e36ee091e203ab3c1460619/raw/9a329972aced1227917ecd7747980d84c09e29f6/nppswp.patch' | patch -p1 )
 
 export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -n -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable-wp|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"_WP-${ARCH}.AppImage
 
