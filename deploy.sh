@@ -15,8 +15,8 @@ chmod +x ./appimagetool-x86_64.AppImage
 npps () {
 
 ver=$(wget https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep "Notepad++ " | sed s'|"| |g' | awk '{print $5}' | head -n1)
-wget https://github.com/$(wget -qO- https://github.com/notepad-plus-plus/notepad-plus-plus/releases | grep download/ | cut -d '"' -f2 | sed -n 7p) &> /dev/null
-7z x -aos "npp.$ver.Installer.x64.exe" -x'!change.log' -x'!doLocalConf.xml' -x'!LICENSE' -x'!NppShell_06.dll' -x'!readme.txt' -x'!userDefinedLang-markdown.default.modern.xml' -o"npp-stable/usr/share/notepad-plus-plus"
+wget https://github.com/$(wget -qO- https://github.com/notepad-plus-plus/notepad-plus-plus/releases | grep download/ | cut -d '"' -f2 | sed -n 5p) &> /dev/null
+7z x -aos "npp.$ver.Installer.exe" -x'!change.log' -x'!doLocalConf.xml' -x'!LICENSE' -x'!NppShell_06.dll' -x'!readme.txt' -x'!userDefinedLang-markdown.default.modern.xml' -o"npp-stable/usr/share/notepad-plus-plus"
 # winedata
 appdir="npp-stable/usr/share/notepad-plus-plus"
 mkdir -p "npp-stable/winedata/Application Data/Notepad++" && mkdir -p "npp-stable/usr/share/notepad-plus-plus/plugins/Config"
@@ -38,6 +38,7 @@ export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -u "gh-releases-zsync|m
 nppswp () {
 
 export WINEDLLOVERRIDES="mscoree,mshtml="
+export WINEARCH="win32"
 export WINEPREFIX="/home/runner/.wine"
 export WINEDEBUG="-all"
 
