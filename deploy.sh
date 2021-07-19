@@ -49,6 +49,7 @@ export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEARCH="win32"
 export WINEPREFIX="/home/runner/.wine"
 export WINEDEBUG="-all"
+export PATH=$PATH:"/opt/wine-stable/bin"
 
 npps ; rm ./*AppImage*
 
