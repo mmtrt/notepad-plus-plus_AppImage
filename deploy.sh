@@ -3,19 +3,19 @@
 npps () {
 
 # Convert and copy icon which is needed for desktop integration into place:
-wget https://github.com/mmtrt/notepad-plus-plus/raw/master/snap/local/src/notepad-plus-plus.png -O notepad-plus-plus.png &>/dev/null
+wget -q https://github.com/mmtrt/notepad-plus-plus/raw/master/snap/local/src/notepad-plus-plus.png -O notepad-plus-plus.png
 for width in 8 16 22 24 32 36 42 48 64 72 96 128 192 256; do
     dir=icons/hicolor/${width}x${width}/apps
     mkdir -p $dir
     convert notepad-plus-plus.png -resize ${width}x${width} $dir/notepad-plus-plus.png
 done
 
-wget -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+wget -q "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
 chmod +x ./appimagetool-x86_64.AppImage
-./appimagetool-x86_64.AppImage --appimage-extract
+./appimagetool-x86_64.AppImage --appimage-extract &>/dev/null
 
 ver=$(wget https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep "Notepad++ " | sed s'|"| |g' | awk '{print $5}' | head -n1)
-wget https://github.com/$(wget -qO- https://github.com/notepad-plus-plus/notepad-plus-plus/releases | grep download/ | cut -d '"' -f2 | sed -n 5p) &> /dev/null
+wget -q https://github.com/$(wget -qO- https://github.com/notepad-plus-plus/notepad-plus-plus/releases | grep download/ | cut -d '"' -f2 | sed -n 5p)
 7z x -aos "npp.$ver.Installer.exe" -x'!change.log' -x'!doLocalConf.xml' -x'!LICENSE' -x'!NppShell_06.dll' -x'!readme.txt' -x'!userDefinedLang-markdown.default.modern.xml' -o"npp-stable/usr/share/notepad-plus-plus"
 # winedata
 appdir="npp-stable/usr/share/notepad-plus-plus"
@@ -31,7 +31,7 @@ mkdir -p npp-stable/usr/bin ; cp notepad-plus-plus.desktop npp-stable ; cp AppRu
 
 cp -r icons npp-stable/usr/share ; cp notepad-plus-plus.png npp-stable
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"-${ARCH}.AppImage
+export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"-${ARCH}.AppImage &>/dev/null
 
 }
 
@@ -54,11 +54,11 @@ chmod +x *.AppImage ; mv wine-stable_${WINE_VER}-x86_64.AppImage wine-stable.App
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
 
-cp -Rvp $WINEPREFIX npp-stable/ ; rm -rf $WINEPREFIX ; rm ./*.AppImage
+cp -Rp $WINEPREFIX npp-stable/ ; rm -rf $WINEPREFIX ; rm ./*.AppImage
 
 ( cd npp-stable ; wget -qO- 'https://gist.github.com/mmtrt/df659de58e36ee091e203ab3c1460619/raw/9a329972aced1227917ecd7747980d84c09e29f6/nppswp.patch' | patch -p1 )
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -n -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable-wp|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"_WP-${ARCH}.AppImage
+export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -n -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable-wp|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"_WP-${ARCH}.AppImage &>/dev/null
 
 }
 
