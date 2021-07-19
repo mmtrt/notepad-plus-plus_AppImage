@@ -67,7 +67,7 @@ jobs:
         with:
           name: notepad-plus-plus-continuous-x86_64.AppImage
 
-      - name: Release
+      - name: release
         uses: marvinpinto/action-automatic-releases@latest
         with:
           title: notepad-plus-plus stable
@@ -87,7 +87,7 @@ jobs:
         with:
           name: notepad-plus-plus-continuous-wp-x86_64.AppImage
 
-      - name: Release
+      - name: release
         uses: marvinpinto/action-automatic-releases@latest
         with:
           title: notepad-plus-plus stable with wineprefix
