@@ -61,13 +61,6 @@ jobs:
           set -ex
           export DISPLAY=':99.0'
           sudo Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          # sudo dpkg --add-architecture i386
-          # wget -nc https://dl.winehq.org/wine-builds/winehq.key
-          # sudo apt-key add winehq.key
-          # sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main'
-          # sudo apt update
-          # sudo apt install --install-recommends wine-stable-i386:i386 -y
-          # sudo apt install --no-install-recommends wine-stable:i386 -y
           bash deploy.sh stablewp
           mkdir dist
           mv notepad-plus-plus*.AppImage* dist/.
