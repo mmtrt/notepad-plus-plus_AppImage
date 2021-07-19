@@ -64,6 +64,8 @@ export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -n -u "gh-releases-zsyn
 
 if [ "$1" == "stable" ]; then
     npps
+    ( mkdir -p dist ; mv notepad-plus-plus*.AppImage* dist/. ; cd dist || exit ; chmod +x ./*.AppImage )
 elif [ "$1" == "stablewp" ]; then
     nppswp
+    ( mkdir -p dist ; mv notepad-plus-plus*.AppImage* dist/. ; cd dist || exit ; chmod +x ./*.AppImage )
 fi
