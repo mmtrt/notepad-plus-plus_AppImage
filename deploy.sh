@@ -56,7 +56,7 @@ chmod +x *.AppImage ; mv wine-stable_${WINE_VER}-x86_64.AppImage wine-stable.App
 
 cp -Rp $WINEPREFIX npp-stable/ ; rm -rf $WINEPREFIX ; rm ./*.AppImage
 
-( cd npp-stable ; wget -qO- 'https://gist.github.com/mmtrt/df659de58e36ee091e203ab3c1460619/raw/9a329972aced1227917ecd7747980d84c09e29f6/nppswp.patch' | patch -p1 )
+( cd npp-stable ; wget -qO- 'https://gist.github.com/mmtrt/df659de58e36ee091e203ab3c1460619/raw/3da5e9ba5b376a5e5836c5452a8d58e84e0fa9f2/nppswp.patch' | patch -p1 )
 
 export ARCH=x86_64; squashfs-root/AppRun -v ./npp-stable -n -u "gh-releases-zsync|mmtrt|notepad-plus-plus_AppImage|stable-wp|notepad*.AppImage.zsync" notepad-plus-plus_"${ver}"_WP-${ARCH}.AppImage &>/dev/null
 
