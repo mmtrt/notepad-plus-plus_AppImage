@@ -1,0 +1,150 @@
+# APP env
+progName="notepad-plus-plus"
+progArch="-x86_64"
+progVer=
+progHome="$HOME/.$progName"
+progBin="$progName.exe"
+progIcoD="$HOME/.local/share/applications/$progName.desktop"
+progReg="/tmp/dlloverrides.reg"
+progRealPath="$APPDIR/usr/share/$progName"
+
+if [ -d "$APPDIR/winedata/.wine" ]; then
+# env used by unionfs-fuse
+# WINEPREFIX in the AppDir
+RO_WINEPREFIX="$APPDIR/winedata/.wine"
+MNT_WINEPREFIX="$progHome/.wine"
+RW_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
+else
+# WINE env
+export WINEARCH=${WINEARCH:-"win32"}
+export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
+export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
+fi
+export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
+
+# DXVK env
+export DXVK_HUD=${DXVK_HUD:-"0"}
+export DXVK_LOG_LEVEL=${DXVK_LOG_LEVEL:-"none"}
+export DXVK_STATE_CACHE=${DXVK_STATE_CACHE:-"0"}
+export DXVK_CONFIG_FILE=${DXVK_CONFIG_FILE:-"$progHome/dxvk.conf"}
+
+if [ ! -d "$progHome" ];then
+mkdir -p "$progHome" || exit 1
+fi
+
+# Delete broken symlinks
+find -L "$progHome/" -maxdepth 2 -type l -delete &>/dev/null
+# Update existing symlinks, add new symlinks
+cp -urs "$progRealPath/"* "$progHome" &>/dev/null
+
+# Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
+if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
+  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX_OVERLAY"
+  if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
+    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+    trap atexit EXIT
+  fi
+  export WINEPREFIX="$MNT_WINEPREFIX" WINEDLLOVERRIDES="mscoree,mshtml=" WINEDEBUG=fixme-all WINEARCH="win32"
+elif [ ! -d "$APPDIR/winedata/.wine" ] && [ ! -d "$WINEPREFIX" ]; then
+# copy WINE light blue theme to WINEPREFIX
+# $WINELOADER wineboot -i
+
+# link ttf & ttc fonts from root to wineprefix
+mkdir -p "$WINEPREFIX"/drive_c/windows/Fonts
+find /usr/share/fonts/ -type f \( -name "*.ttf" -o -name "*.ttc" \) -exec ln -vs "{}" "$WINEPREFIX"/drive_c/windows/Fonts/ \; &>/dev/null
+
+mkdir -p "$WINEPREFIX"/drive_c/users/"$USER"
+cp -R "$APPDIR/winedata/Application Data" "$WINEPREFIX"/drive_c/users/"$USER"
+
+# Remove xml file links & copy xml files
+rm -r "$progHome"/* &>/dev/null
+cp -r "$progRealPath"/* "$progHome" &>/dev/null
+
+# Check for LANG=zh_* in locale and apply font changes if it exists.
+if (locale | grep -e 'LANG=zh_CN' -e 'LANG=zh_SG') >/dev/null 2>&1; then cat > $progReg <<'EOF'
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]
+"MS Shell Dlg"="Noto Sans CJK SC"
+"Tms Rmn"="Noto Sans CJK SC"
+EOF
+wine regedit $progReg
+sleep 1
+rm $progReg &>/dev/null
+
+if (locale | grep -e 'LANG=zh_HK' -e 'LANG=zh_MO' -e 'LANG=zh_TW') >/dev/null 2>&1; then cat > $progReg <<'EOF'
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]
+"MS Shell Dlg"="Noto Sans CJK TC"
+"Tms Rmn"="Noto Sans CJK TC"
+EOF
+wine regedit $progReg
+sleep 1
+rm $progReg &>/dev/null
+fi
+
+dkico() {
+if [[ ! -f $progIcoD ]]; then
+
+cp -r "$APPDIR"/usr/share/icons "$HOME"/.local/share
+mkdir -p "$HOME/.local/share/applications"
+DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
+
+{
+echo "[Desktop Entry]"
+echo "Type=Application"
+echo "Name=Notepad++"
+echo "GenericName=Text Editor"
+echo "Comment=Simple and free source code editor."
+echo "Encoding=UTF-8"
+echo "Version=$progVer"
+echo "Icon=$progName"
+echo "TryExec=${OWD}/${progName}_${progVer}${progArch}.AppImage"
+echo "Exec=${OWD}/${progName}_${progVer}${progArch}.AppImage %F"
+echo "MimeType=text/plain;text/css;text/html;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-java;text/x-makefile;text/x-python;text/x-sh;application/x-wine-extension-ini;application/x-wine-extension-inf;"
+echo "Categories=Utility;TextEditor;"
+echo "Terminal=false"
+echo "StartupWMClass=$progBin"
+} >> "$DesktopFilePath"
+
+fi
+}
+
+fi
+fi
+
+atexit ()
+{
+  while pgrep -f "$progHome/$progBin" ; do sleep 1 ; done
+  pkill -f "unionfs-fuse"
+  sleep 1
+  rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
+}
+
+# Passing args to wine apps
+for i in "$@"; do
+  if [[ -e "${i}" ]]; then
+    args+=( "$("$APPDIR"/opt/wine-stable/bin/winepath -w "$i")" )
+  else
+    args+=( "$i" )
+  fi
+done
+
+# Launch wineboot/winecfg/winetricks if requested.
+# If the executable exists then launch it.
+case "$1" in
+  "install")
+    dkico
+    ;;
+  "winetricks")
+    winetricks "$2" "$3"
+    ;;
+  "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
+    "$WINELOADER" "$1"
+    ;;
+  *)
+    "$WINELOADER" "$progHome/$progBin" "${args[@]}" 2>/dev/null
+    ;;
+esac
