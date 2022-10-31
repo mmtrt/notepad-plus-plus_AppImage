@@ -34,6 +34,8 @@ export WINEARCH="win32"
 export WINEPREFIX="/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/AppDir/winedata/.wine"
 export WINEDEBUG="-all"
 
+wget -q "https://github.com/mmtrt/sommelier-core/raw/tmp/themes/light/light.msstyles" -P $WINEPREFIX/drive_c/windows/resources/themes/light
+
 wget -q https://github.com/mmtrt/notepad-plus-plus/raw/master/snap/local/src/notepad-plus-plus.png -O notepad-plus-plus.png
 
 wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder
@@ -64,6 +66,8 @@ chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppI
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
 
 echo "disabled" > $WINEPREFIX/.update-timestamp
+
+sed -i "8d" npp.yml
 
 sed -i 's/stable|/stable-wp|/' npp.yml
 
