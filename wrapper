@@ -69,7 +69,7 @@ Windows Registry Editor Version 5.00
 "MS Shell Dlg"="Noto Sans CJK SC"
 "Tms Rmn"="Noto Sans CJK SC"
 EOF
-wine regedit $progReg
+"$APPDIR/usr/local/bin/box64" wine regedit $progReg
 sleep 1
 rm $progReg &>/dev/null
 
@@ -80,7 +80,7 @@ Windows Registry Editor Version 5.00
 "MS Shell Dlg"="Noto Sans CJK TC"
 "Tms Rmn"="Noto Sans CJK TC"
 EOF
-wine regedit $progReg
+"$APPDIR/usr/local/bin/box64" wine regedit $progReg
 sleep 1
 rm $progReg &>/dev/null
 fi
@@ -142,9 +142,9 @@ case "$1" in
     winetricks "$2" "$3"
     ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
-    "$WINELOADER" "$1"
+    "$APPDIR/usr/local/bin/box64" "$WINELOADER" "$1"
     ;;
   *)
-    "$WINELOADER" "$progHome/$progBin" "${args[@]}" 2>/dev/null
+    "$APPDIR/usr/local/bin/box64" "$WINELOADER" "$progHome/$progBin" "${args[@]}" 2>/dev/null
     ;;
 esac
