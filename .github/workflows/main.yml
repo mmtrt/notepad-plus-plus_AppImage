@@ -18,7 +18,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "npp"
+  # # This workflow contains a single job called "npp"
   # npp:
   #   # The type of runner that the job will run on
   #   runs-on: ubuntu-latest
@@ -137,21 +137,21 @@ jobs:
   #         repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   release-stable-box86:
-  needs: [npp-box86]
-  runs-on: ubuntu-latest
+    needs: [npp-box86]
+    runs-on: ubuntu-latest
 
-  steps:
-    - uses: actions/download-artifact@v1
-      with:
-        name: notepad-plus-plus-continuous-aarch64.AppImage
+    steps:
+      - uses: actions/download-artifact@v1
+        with:
+          name: notepad-plus-plus-continuous-aarch64.AppImage
 
-    - name: release
-      uses: marvinpinto/action-automatic-releases@latest
-      with:
-        title: notepad-plus-plus stable
-        automatic_release_tag: stable-box86
-        prerelease: false
-        draft: false
-        files: |
-          notepad-plus-plus-continuous-aarch64.AppImage
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          title: notepad-plus-plus stable
+          automatic_release_tag: stable-box86
+          prerelease: false
+          draft: false
+          files: |
+            notepad-plus-plus-continuous-aarch64.AppImage
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
