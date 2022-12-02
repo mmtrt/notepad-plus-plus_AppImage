@@ -53,35 +53,6 @@ AppDir:
       - libxcursor1:armhf
       - libcups2:armhf
       - libmpg123-0:armhf
-      - libdrm2:armhf
-      # - libdrm-intel1:armhf
-      - libdrm-nouveau2:armhf
-      - libdrm-amdgpu1:armhf
-      - libdrm-radeon1:armhf
-      - libegl-mesa0:armhf
-      - libegl1:armhf
-      - libgbm1:armhf
-      - libgl1:armhf
-      - libgl1-mesa-dri:armhf
-      - libglapi-mesa:armhf
-      - libgles2:armhf
-      - libglvnd0:armhf
-      - libglx0:armhf
-      - libglx-mesa0:armhf
-      - mesa-vdpau-drivers:armhf
-      - mesa-va-drivers:armhf
-      - mesa-vulkan-drivers:armhf
-      - libx11-6:armhf
-      - libx11-xcb1:armhf
-      - libxcb-dri2-0:armhf
-      - libxcb-dri3-0:armhf
-      - libxcb-glx0:armhf
-      - libxcb-present0:armhf
-      - libxcb-render0:armhf
-      - libxcb-shape0:armhf
-      - libxcb-shm0:armhf
-      - libxcb-xfixes0:armhf
-      - libxcb1:armhf
 
   files:
     exclude:

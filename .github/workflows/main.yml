@@ -148,7 +148,7 @@ jobs:
       - name: release
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          title: notepad-plus-plus stable
+          title: notepad-plus-plus stable box86
           automatic_release_tag: stable-box86
           prerelease: false
           draft: false
