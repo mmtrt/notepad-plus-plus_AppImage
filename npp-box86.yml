@@ -53,6 +53,7 @@ AppDir:
       - libxcursor1:armhf
       - libcups2:armhf
       - libmpg123-0:armhf
+      - libxxf86vm1:armhf
 
   files:
     exclude:
