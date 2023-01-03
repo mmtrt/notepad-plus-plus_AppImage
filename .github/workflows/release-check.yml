@@ -12,11 +12,15 @@ jobs:
     - uses: actions/checkout@v3
     - name: get-latest-version
       run: |
-        VERSION="$(wget 2>/dev/null https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep "Notepad++ " | sed s'|"| |g' | awk '{print $5}' | head -n1)"
+        VERSION="$(wget 2>/dev/null https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qSO- | grep -Eo ".*.x6" | head -1 | grep -Po "(\d+\.)+\d+")"
+        VERSION_CHECK="$(echo $VERSION | wc -l)"
         last=$(tail -n1 .build | awk '{print $4}')
-
-        if [ "$last" != "$VERSION" ]; then
-          echo "$(date -u --rfc-3339=seconds) Version $VERSION" >> .build
+        if [ "$VERSION_CHECK" -eq 1 ]; then
+         if [ "$last" != "$VERSION" ]; then
+           echo "$(date -u --rfc-3339=seconds) Version $VERSION" >> .build
+         fi
+        else
+         echo "No update released." 
         fi
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
