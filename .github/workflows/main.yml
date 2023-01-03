@@ -30,7 +30,7 @@ jobs:
 
       # Set NPP_VER
       - name: Run version script
-        run: echo "NPP_VER=$(wget 2>/dev/null https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep "Notepad++ " | sed s'|"| |g' | awk '{print $5}' | head -n1)" >> $GITHUB_ENV
+        run: echo "NPP_VER=$(wget 2>/dev/null https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qSO- | grep -Eo ".*.x6" | head -1 | grep -Po "(\d+\.)+\d+")" >> $GITHUB_ENV
 
       # Runs a set of commands using the runners shell
       - name: Run a single-line script
@@ -56,7 +56,7 @@ jobs:
 
       # Set NPP_VER
       - name: Run version script
-        run: echo "NPP_VER=$(wget 2>/dev/null https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep "Notepad++ " | sed s'|"| |g' | awk '{print $5}' | head -n1)" >> $GITHUB_ENV
+        run: echo "NPP_VER=$(wget 2>/dev/null https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qSO- | grep -Eo ".*.x6" | head -1 | grep -Po "(\d+\.)+\d+")" >> $GITHUB_ENV
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
@@ -82,7 +82,7 @@ jobs:
 
       # Set NPP_VER
       - name: Run version script
-        run: echo "NPP_VER=$(wget 2>/dev/null https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep "Notepad++ " | sed s'|"| |g' | awk '{print $5}' | head -n1)_WP" >> $GITHUB_ENV
+        run: echo "NPP_VER=$(wget 2>/dev/null https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qSO- | grep -Eo ".*.x6" | head -1 | grep -Po "(\d+\.)+\d+")_WP" >> $GITHUB_ENV
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
