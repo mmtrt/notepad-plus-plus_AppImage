@@ -10,6 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.PATN }}
     - name: get-latest-version
       run: |
         VERSION="$(wget 2>/dev/null https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qSO- | grep -Eo ".*.x6" | head -1 | grep -Po "(\d+\.)+\d+")"
