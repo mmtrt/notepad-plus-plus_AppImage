@@ -26,7 +26,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Set NPP_VER
       - name: Run version script
@@ -52,7 +52,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Set NPP_VER
       - name: Run version script
@@ -78,7 +78,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Set NPP_VER
       - name: Run version script
@@ -106,7 +106,7 @@ jobs:
           name: notepad-plus-plus-continuous-x86_64.AppImage
 
       - name: release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
         with:
           title: notepad-plus-plus stable
           automatic_release_tag: stable
@@ -126,7 +126,7 @@ jobs:
           name: notepad-plus-plus-continuous-wp-x86_64.AppImage
 
       - name: release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
         with:
           title: notepad-plus-plus stable with wineprefix
           automatic_release_tag: stable-wp
@@ -146,7 +146,7 @@ jobs:
           name: notepad-plus-plus-continuous-aarch64.AppImage
 
       - name: release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
         with:
           title: notepad-plus-plus stable box86
           automatic_release_tag: stable-box86
