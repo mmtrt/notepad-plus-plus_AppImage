@@ -110,7 +110,7 @@ rm builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/a
 
 # Add static appimage runtime
 mkdir -p appimage-build/prime
-wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-x86_64" -O appimage-build/prime/runtime-x86_64
+wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
 
 ver=$(wget https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep "Notepad++ " | sed s'|"| |g' | awk '{print $5}' | head -n1)
 wget -q https://github.com/$(wget -qO- https://github.com/notepad-plus-plus/notepad-plus-plus/releases | grep download/ | cut -d '"' -f2 | sed -n 5p)
