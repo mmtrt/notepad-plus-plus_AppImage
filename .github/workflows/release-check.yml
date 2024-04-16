@@ -14,7 +14,7 @@ jobs:
         token: ${{ secrets.PATN }}
     - name: get-latest-version
       run: |
-        VERSION="$(wget 2>/dev/null https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qSO- | grep -Eo ".*.x6" | head -1 | grep -Po "(\d+\.)+\d+")"
+        VERSION="$(wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep -Eo ".*.x6" | grep npp | grep -Po "(\d+\.)+\d+" | head -n1)"
         VERSION_CHECK="$(echo $VERSION | wc -l)"
         last=$(tail -n1 .build | awk '{print $4}')
         if [ "$VERSION_CHECK" -eq 1 ]; then
