@@ -4,8 +4,6 @@ script:
   - mkdir -p AppDir/winedata
   # Add winetricks
   - wget -q -nc "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" -P ./AppDir/bin && chmod +x ./AppDir/bin/winetricks
-  # Add WINE official light blue theme
-  - wget -q -nc "https://github.com/mmtrt/sommelier-core/raw/tmp/themes/light/light.msstyles" -P ./AppDir/winedata/resources/themes/light
 
 AppDir:
   path: ./AppDir
