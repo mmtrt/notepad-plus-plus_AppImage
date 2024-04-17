@@ -109,6 +109,9 @@ AppDir:
   after_bundle:
     # this is executed after the packages and files are added
     - |
+     # Patch wrapper script to use wine-devel
+     sed -i 's|wine-stable|wine-devel|g' AppDir/wrapper
+
      WINE_VER="8.21"
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/main/binary-i386/wine-devel_${WINE_VER}~jammy-1_i386.deb
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/main/binary-i386/wine-devel-i386_${WINE_VER}~jammy-1_i386.deb
