@@ -110,10 +110,10 @@ AppDir:
     # this is executed after the packages and files are added
     - |
      WINE_VER="8.21"
-     wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/wine-devel_${WINE_VER}~focal_i386.deb
-     wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/wine-devel-i386_${WINE_VER}~focal_i386.deb
-     dpkg -x "wine-devel_${WINE_VER}~focal_i386.deb" AppDir/
-     dpkg -x "wine-devel-i386_${WINE_VER}~focal_i386.deb" AppDir/
+     wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/main/binary-i386/wine-devel_${WINE_VER}~jammy-1_i386.deb
+     wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/main/binary-i386/wine-devel-i386_${WINE_VER}~jammy-1_i386.deb
+     dpkg -x "wine-devel_${WINE_VER}~jammy-1_i386.deb" AppDir/
+     dpkg -x "wine-devel-i386_${WINE_VER}~jammy-1_i386.deb" AppDir/
      #cp -r AppDir/usr/opt/wine-devel/* AppDir/usr
 
      # Cleanup
