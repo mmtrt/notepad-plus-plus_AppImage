@@ -1,7 +1,7 @@
 version: 1
 
 script:
-  - mkdir -p AppDir/winedata
+  - mkdir -p AppDir/winedata AppDir/usr/lib64
   # Add winetricks
   - wget -q -nc "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" -P ./AppDir/bin && chmod +x ./AppDir/bin/winetricks
 
