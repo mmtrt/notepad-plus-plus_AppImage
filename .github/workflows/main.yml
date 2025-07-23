@@ -39,10 +39,10 @@ jobs:
           bash deploy.sh stable
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: notepad-plus-plus-continuous-x86_64.AppImage
-          path: 'dist'
+          path: '/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/dist'
 
   # This workflow contains a single job called "npp-box86"
   npp-box86:
@@ -65,19 +65,20 @@ jobs:
           bash deploy.sh stable-box86
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: notepad-plus-plus-continuous-aarch64.AppImage
-          path: 'dist'
+          path: '/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/dist'
 
   release-stable:
     needs: [npp]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v4
         with:
           name: notepad-plus-plus-continuous-x86_64.AppImage
+          path: '/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/notepad-plus-plus-continuous-x86_64.AppImage'
 
       - name: release
         uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
@@ -95,9 +96,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v4
         with:
           name: notepad-plus-plus-continuous-aarch64.AppImage
+          path: '/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/notepad-plus-plus-continuous-aarch64.AppImage'
 
       - name: release
         uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
