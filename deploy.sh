@@ -33,7 +33,19 @@ mkdir -p npp-stable/usr/bin ; mkdir -p npp-stable/usr/share/icons; cp notepad-pl
 
 mkdir -p AppDir/winedata ; cp -r "npp-stable/"* AppDir
 
-./squashfs-root/AppRun --recipe npp.yml
+./squashfs-root/AppRun --skip-appimage --recipe npp.yml
+
+export ARCH="$(uname -m)"
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|stable|*$ARCH.AppImage.zsync"
+VERSION=$(wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep -Eo ".*.x6" | grep npp | grep -Po "(\d+\.)+\d+" | head -n1)
+URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
+URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
+wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
+wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
+chmod +x ./uruntime*
+./uruntime-lite --appimage-addupdinfo "$UPINFO"
+./uruntime --appimage-mkdwarfs -f --set-owner 0 --set-group 0 --no-history --no-create-timestamp --compression zstd:level=22 -S26 -B8 --header uruntime-lite -i AppDir -o ./notepad-plus-plus-"$VERSION"-"$ARCH".AppImage
+zsyncmake *.AppImage -u *.AppImage
 }
 
 nppsbx86 () {
