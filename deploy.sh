@@ -23,9 +23,9 @@ wget -q https://github.com/$(wget -qO- https://github.com/notepad-plus-plus/note
 appdir="npp-stable/usr/share/notepad-plus-plus"
 mkdir -p "npp-stable/winedata/Application Data/Notepad++" && mkdir -p "npp-stable/usr/share/notepad-plus-plus/plugins/Config"
 mv $appdir/notepad++.exe $appdir/notepad-plus-plus.exe
-cp -R $appdir/'$_14_'/* "npp-stable/winedata/Application Data/Notepad++";cp -R $appdir/'$_15_'/* "npp-stable/usr/share/notepad-plus-plus/plugins";cp -R $appdir/'$_17_'/* "npp-stable/usr/share/notepad-plus-plus/plugins/Config"
+cp -R $appdir/'$_18_'/* "npp-stable/winedata/Application Data/Notepad++";cp -R $appdir/'$_19_'/* "npp-stable/usr/share/notepad-plus-plus/plugins";cp -R $appdir/'$_21_'/* "npp-stable/usr/share/notepad-plus-plus/plugins/Config"
 find $appdir/'$PLUGINSDIR' -type f -name '*.xml' -print0 | while read -d $'\0' file; do cp -v "$file" $appdir/localization/ &>/dev/null; done
-rm -R $appdir/'$_14_';rm -R $appdir/'$_15_';rm -R $appdir/'$_17_';rm -R $appdir/'$PLUGINSDIR';
+rm -R $appdir/'$_18_';rm -R $appdir/'$_19_';rm -R $appdir/'$_21_';rm -R $appdir/'$PLUGINSDIR';
 find "npp-stable/usr" -type d -execdir chmod 755 {} + && find "npp-stable/winedata" -type d -execdir chmod 755 "{}" +
 rm ./*.exe
 
