@@ -37,26 +37,13 @@ mkdir -p AppDir/winedata ; cp -r "npp-stable/"* AppDir
 
 export ARCH="$(uname -m)"
 export APPIMAGE_EXTRACT_AND_RUN=1
+export URUNTIME_PRELOAD=1
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|stable|*$ARCH.AppImage.zsync"
 VERSION=$(wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep -Eo ".*.x6" | grep npp | grep -Po "(\d+\.)+\d+" | head -n1)
-URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
-URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
-wget -q --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
-wget -q --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
-chmod +x ./uruntime*
-
-# Keep the mount point (speeds up launch time)
-sed -i 's|URUNTIME_MOUNT=[0-9]|URUNTIME_MOUNT=0|' ./uruntime-lite
-
-# Add udpate info to runtime
-echo "Adding update information \"$UPINFO\" to runtime..."
-./uruntime-lite --appimage-addupdinfo "$UPINFO"
 
 echo "Generating AppImage..."
-./uruntime --appimage-mkdwarfs -f --set-owner 0 --set-group 0 --no-history --no-create-timestamp --compression zstd:level=22 -S26 -B8 --header uruntime-lite -i AppDir -o ./notepad-plus-plus-"$VERSION"-"$ARCH".AppImage
+appimagetool --no-appstream -u "$UPINFO" AppDir notepad-plus-plus-"$VERSION"-"$ARCH".AppImage
 
-echo "Generating zsync file..."
-zsyncmake *.AppImage -u *.AppImage
 }
 
 nppsbx86 () {
