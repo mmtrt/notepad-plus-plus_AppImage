@@ -133,6 +133,19 @@ for i in "$@"; do
   fi
 done
 
+if [ -e "$progHome"/version ] && [ -e "$APPDIR"/version ]; then
+VERSION="$(cat $APPDIR/version)"
+last="$(cat $progHome/version)"
+ if [ "$last" != "$VERSION" ]; then
+  echo updating to "$VERSION"
+  cp -R "$APPDIR/winedata/Application Data" "$WINEPREFIX"/drive_c/users/"$USER"
+  # Remove xml file links & copy xml files
+  rm -r "$progHome"/* &>/dev/null
+  cp -r "$progRealPath"/* "$progHome" &>/dev/null
+  cp -r "$APPDIR"/version "$progHome" &>/dev/null
+ fi
+fi
+
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.
 case "$1" in

@@ -40,6 +40,7 @@ export APPIMAGE_EXTRACT_AND_RUN=1
 export URUNTIME_PRELOAD=1
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|stable|*$ARCH.AppImage.zsync"
 VERSION=$(wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep -Eo ".*.x6" | grep npp | grep -Po "(\d+\.)+\d+" | head -n1)
+echo "$VERSION" > AppDir/version
 
 echo "Generating AppImage..."
 appimagetool --no-appstream -u "$UPINFO" AppDir notepad-plus-plus-"$VERSION"-"$ARCH".AppImage
