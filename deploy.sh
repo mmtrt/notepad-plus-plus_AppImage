@@ -29,7 +29,7 @@ rm -R $appdir/'$_23_';rm -R $appdir/'$_24_';rm -R $appdir/'$_26_';rm -R $appdir/
 find "npp-stable/usr" -type d -execdir chmod 755 {} + && find "npp-stable/winedata" -type d -execdir chmod 755 "{}" +
 rm ./*.exe
 
-mkdir -p npp-stable/usr/bin ; mkdir -p npp-stable/usr/share/icons; cp notepad-plus-plus.desktop npp-stable ; cp wrapper npp-stable ; sed -i -e 's|progVer=|progVer='"$ver"'|g' npp-stable/wrapper ; cp notepad-plus-plus.png npp-stable/usr/share/icons
+mkdir -p npp-stable/usr/bin ; mkdir -p npp-stable/usr/share/icons; cp notepad-plus-plus.desktop npp-stable ; cp wrapper npp-stable ; sed -i -e 's|progVer=|progVer='"$ver"'|g' npp-stable/wrapper ; cp notepad-plus-plus.png npp-stable/usr/share/icons ; cp -r *.reg npp-stable/winedata
 
 mkdir -p AppDir/winedata ; cp -r "npp-stable/"* AppDir
 

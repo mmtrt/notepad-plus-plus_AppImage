@@ -7,6 +7,7 @@ progBin="$progName.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 progReg="/tmp/dlloverrides.reg"
 progRealPath="$APPDIR/usr/share/$progName"
+progCFG="$progHome/.wine/drive_c/users/$USER/AppData/Roaming/Notepad++/config.xml"
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
 # env used by unionfs-fuse
@@ -144,6 +145,15 @@ last="$(cat $progHome/version)"
   cp -r "$progRealPath"/* "$progHome" &>/dev/null
   cp -r "$APPDIR"/version "$progHome" &>/dev/null
  fi
+fi
+
+if [[ -f "$progCFG" ]]; then
+    DARKMODE_LINE=$(grep -o '<GUIConfig name="DarkMode"[^/]*/>' "$progCFG")
+    if [[ "$DARKMODE_LINE" == *'enable="yes"'* ]]; then
+        "$WINELOADER" regedit "$APPDIR/winedata/dark.reg"
+    else
+        "$WINELOADER" regedit "$APPDIR/winedata/light.reg"
+    fi
 fi
 
 # Launch wineboot/winecfg/winetricks if requested.
