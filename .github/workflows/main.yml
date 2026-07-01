@@ -2,16 +2,13 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
-#   Build at 00:00 on every 15th day-of-month.
-#   schedule:
-#     - cron: "0 0 */15 * *"
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [ test-any ]
   pull_request:
-    branches: [ master ]
+    branches: [ test-any ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,92 +19,23 @@ jobs:
   npp:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghcr.io/pkgforge-dev/archlinux:latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # Set NPP_VER
-      - name: Run version script
-        run: echo "NPP_VER=$(wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep -Eo ".*.x6" | grep npp | grep -Po "(\d+\.)+\d+" | head -n1)" >> $GITHUB_ENV
-
-      # Runs a set of commands using the runners shell
-      - name: Run a single-line script
-        run: |
-          sudo apt update && sudo apt install libfuse2 zsync -y && sudo wget -q https://github.com/pkgforge-dev/appimagetool-uruntime/releases/download/continuous/appimagetool-x86_64.AppImage -O /usr/local/bin/appimagetool && sudo chmod +x /usr/local/bin/appimagetool
-          bash deploy.sh stable
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v7
+      - name: Preparing Container
+        uses: pkgforge-dev/anylinux-setup-action@0964f2258d6c93d1391359978dde081fd8b3c6af # v2
+      - name: Install Dependencies
+        run: /bin/sh ./get-dependencies.sh
+      - name: Make AppImage
+        run: /bin/sh ./make-appimage.sh stable
+      - name: Release
+        uses: slord399/action-automatic-releases@v2.0.4
         with:
-          name: notepad-plus-plus-continuous-x86_64.AppImage
-          path: '/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/dist'
-
-  # # This workflow contains a single job called "npp-box86"
-  # npp-box86:
-  #   # The type of runner that the job will run on
-  #   runs-on: ubuntu-latest
-  #
-  #   # Steps represent a sequence of tasks that will be executed as part of the job
-  #   steps:
-  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-  #     - uses: actions/checkout@v3
-  #
-  #     # Set NPP_VER
-  #     - name: Run version script
-  #       run: echo "NPP_VER=$(wget https://github.com/notepad-plus-plus/notepad-plus-plus/releases -qO - 2>&1 | grep -Eo ".*.x6" | grep npp | grep -Po "(\d+\.)+\d+" | head -n1)" >> $GITHUB_ENV
-  #
-  #     # Runs a set of commands using the runners shell
-  #     - name: Run a multi-line script
-  #       run: |
-  #         sudo apt update && sudo apt install libfuse2 -y
-  #         bash deploy.sh stable-box86
-  #
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: notepad-plus-plus-continuous-aarch64.AppImage
-  #         path: '/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/dist'
-
-  release-stable:
-    needs: [npp]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: notepad-plus-plus-continuous-x86_64.AppImage
-          path: '/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/notepad-plus-plus-continuous-x86_64.AppImage'
-
-      - name: release
-        uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
-        with:
-          title: notepad-plus-plus stable
-          automatic_release_tag: stable
+          title: notepad-plus-plus test build
+          automatic_release_tag: test-any
           prerelease: false
           draft: false
-          files: |
-            notepad-plus-plus-continuous-x86_64.AppImage
+          files: dist/*AppImage*
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-
-  # release-stable-box86:
-  #   needs: [npp-box86]
-  #   runs-on: ubuntu-latest
-  #
-  #   steps:
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: notepad-plus-plus-continuous-aarch64.AppImage
-  #         path: '/home/runner/work/notepad-plus-plus_AppImage/notepad-plus-plus_AppImage/notepad-plus-plus-continuous-aarch64.AppImage'
-  #
-  #     - name: release
-  #       uses: marvinpinto/action-automatic-releases@6273874b61ebc8c71f1a61b2d98e234cf389b303
-  #       with:
-  #         title: notepad-plus-plus stable box86
-  #         automatic_release_tag: stable-box86
-  #         prerelease: false
-  #         draft: false
-  #         files: |
-  #           notepad-plus-plus-continuous-aarch64.AppImage
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }}

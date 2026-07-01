@@ -1,0 +1,111 @@
+#!/bin/sh
+
+# notepad-plus-plus hook — sourced by AppRun via AppRun.lib
+# Sets up WINE/DXVK environment, syncs app data dir, handles
+# install/remove dispatch, and translates file args to Wine paths.
+# Available from AppRun.lib: notify, download, is_cmd, APPDIR,
+# DATADIR, CACHEDIR, HOST_HOME, APPIMAGE_ARCH, HOSTPATH
+
+# APP
+_NPP_NAME="notepad-plus-plus"
+_NPP_VER=
+_NPP_REAL="$APPDIR/share/$_NPP_NAME"
+_NPP_HOME="$HOME/.$_NPP_NAME"
+_NPP_BIN="notepad-plus-plus.exe"
+_NPP_ICOD="$DATADIR/applications/$_NPP_NAME.desktop"
+_NPP_CFG="$_NPP_HOME/.wine/drive_c/users/$USER/AppData/Roaming/Notepad++/config.xml"
+
+# WINE
+export WINE="$APPDIR/bin/wine"
+export WINEPREFIX="${WINEPREFIX:-"$_NPP_HOME/.wine"}"
+export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-"mscoree,mshtml="}"
+export WINEDEBUG="${WINEDEBUG:-"fixme-all"}"
+export WINESERVER="$APPDIR/bin/wineserver"
+export WINELOADER="${WINELOADER:-"$APPDIR/bin/wine"}"
+export WINE_HOST_XDG_CACHE_HOME="$HOST_XDG_CACHE_HOME"
+
+# DXVK
+export DXVK_HUD="${DXVK_HUD:-"0"}"
+export DXVK_LOG_LEVEL="${DXVK_LOG_LEVEL:-"none"}"
+export DXVK_STATE_CACHE="${DXVK_STATE_CACHE:-"0"}"
+export DXVK_CONFIG_FILE="${DXVK_CONFIG_FILE:-"$_NPP_HOME/dxvk.conf"}"
+
+# Silence Mesa EGL/DRI warnings (pci id ... driver (null))
+export EGL_LOG_LEVEL="${EGL_LOG_LEVEL:-"fatal"}"
+
+# Ensure app home exists
+mkdir -p "$_NPP_HOME" || exit 1
+
+# Delete broken symlinks, sync app data — || true guards against set -e
+# from AppRun when the home or share dir is empty/missing on first run
+find -L "$_NPP_HOME/" -maxdepth 2 -type l -delete >/dev/null 2>&1 || true
+cp -urs "$_NPP_REAL/"* "$_NPP_HOME" >/dev/null 2>&1 || true
+
+_npp_install() {
+        if [ ! -f "$_NPP_ICOD" ]; then
+                mkdir -p "$DATADIR/icons/hicolor/256x256/apps"
+                cp "$APPDIR/notepad-plus-plus.png" "$DATADIR/icons/hicolor/256x256/apps/" 2>/dev/null || true
+                mkdir -p "$DATADIR/applications"
+                cat >> "$_NPP_ICOD" << EOF
+[Desktop Entry]
+Type=Application
+Name=Notepad++
+GenericName=Text Editor
+Comment=Simple and free source code editor.
+Encoding=UTF-8
+Version=$_NPP_VER
+Icon=$_NPP_NAME
+Exec=$APPIMAGE %F
+MimeType=text/plain;text/css;text/html;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-java;text/x-makefile;text/x-python;text/x-sh;application/x-wine-extension-ini;application/x-wine-extension-inf;
+Categories=Utility;TextEditor;
+Terminal=false
+StartupWMClass=$_NPP_BIN
+EOF
+update-desktop-database -q 2>/dev/null || true
+        fi
+}
+
+_npp_remove() {
+        rm -f "$DATADIR/applications/$_NPP_NAME.desktop"
+        rm -f "$DATADIR/icons/hicolor/256x256/apps/notepad-plus-plus.png"
+}
+
+# Intercept install/remove before AppRun reaches binary dispatch
+case "$1" in
+        install) _npp_install; exit 0 ;;
+        remove)  _npp_remove;  exit 0 ;;
+esac
+
+# Version check — update winedata in WINEPREFIX when app version changes
+if [ -f "$APPDIR/version" ] && [ -f "$_NPP_HOME/version" ]; then
+        _npp_ver="$(cat "$APPDIR/version")"
+        _npp_last="$(cat "$_NPP_HOME/version")"
+        if [ "$_npp_last" != "$_npp_ver" ]; then
+                echo "Updating to $_npp_ver"
+                cp -R "$APPDIR/winedata/Application Data/Notepad++/." \
+                      "$WINEPREFIX/drive_c/users/$USER/AppData/Roaming/Notepad++/" \
+                      2>/dev/null || true
+                cp "$APPDIR/version" "$_NPP_HOME/version" 2>/dev/null || true
+        fi
+fi
+
+# Apply dark/light theme based on config — before wineserver starts
+if [ -f "$_NPP_CFG" ]; then
+        if grep -q 'DarkMode.*enable="yes"' "$_NPP_CFG" 2>/dev/null; then
+                "$WINELOADER" regedit "$APPDIR/winedata/dark.reg" 2>/dev/null || true
+        else
+                "$WINELOADER" regedit "$APPDIR/winedata/light.reg" 2>/dev/null || true
+        fi
+fi
+
+# Translate host file paths to Wine paths.
+# Uses shift-and-count to avoid eval and preserve paths with spaces.
+_npp_argc=$#
+while [ "$_npp_argc" -gt 0 ]; do
+        _npp_arg="$1"; shift; _npp_argc=$((_npp_argc - 1))
+        if [ -e "$_npp_arg" ]; then
+                set -- "$@" "$("$APPDIR"/bin/winepath -w "$_npp_arg")"
+        else
+                set -- "$@" "$_npp_arg"
+        fi
+done

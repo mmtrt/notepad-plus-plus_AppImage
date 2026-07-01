@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Thin launcher called by AppRun as MAIN_BIN after notepad-plus-plus.hook
+# has set up the Wine/DXVK env and translated file args.
+
+progHome="$HOME/.notepad-plus-plus"
+progBin="notepad-plus-plus.exe"
+
+exec "$WINELOADER" "$progHome/$progBin" "$@"
